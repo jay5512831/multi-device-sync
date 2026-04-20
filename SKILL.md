@@ -9,7 +9,8 @@ description: |
   适用场景：办公室+家里双机工作、多台电脑轮换使用、出差时用笔记本继续工作。
   支持群晖Drive/iCloud/OneDrive/Dropbox/Git等主流同步方式，三种架构自动适配。
   触发词：开工, 收工, 下班, 同步, 多设备, 切入, 切出, switch in, switch out,
-  sync devices, multi device, 跨设备, 双机, 多机
+  sync devices, multi device, 跨设备, 双机, 多机,
+  反馈问题, 报bug, 报 bug, 同步出错, 提交反馈, 同步报错, sync bug, 同步问题
 ---
 
 # WorkBuddy 多设备记忆同步
@@ -296,3 +297,91 @@ git push
 切入脚本：`scripts/sync-in.ps1` 或 `scripts/sync-in.sh`
 切出脚本：`scripts/sync-out.ps1` 或 `scripts/sync-out.sh`
 冲突扫描：`scripts/detect-conflicts.ps1` 或 `scripts/detect-conflicts.sh`
+诊断采集：`scripts/collect-diagnostics.ps1` 或 `scripts/collect-diagnostics.sh`
+
+## 问题反馈
+
+**触发**：用户说"反馈问题""报 bug""同步出错了""提交反馈""同步报错"等词时，进入反馈收集流程。
+
+**目的**：自动收集环境和同步状态的诊断信息，引导用户描述问题，生成一份结构化的 `.md` 报告文件，方便用户直接发给开发者定位问题。
+
+### 流程（严格按步骤执行）
+
+#### Step 1：运行诊断脚本
+
+根据 OS 运行对应脚本（`{skill_dir}` 为本 skill 的安装目录，即加载时获得的 base directory）：
+- Windows：`{skill_dir}/scripts/collect-diagnostics.ps1 -WorkspaceRoot "{workspace}"`
+- macOS/Linux：`bash {skill_dir}/scripts/collect-diagnostics.sh "{workspace}"`
+
+记录脚本输出，后续填入报告。
+
+#### Step 2：读取配置和状态文件
+
+依次读取以下文件（如果不存在则记录"不存在"）：
+1. `{workspace}/.workbuddy/sync-config.yaml` — 完整内容
+2. `{workspace}/.workbuddy/sync-lock` — 完整内容
+3. `{workspace}/.workbuddy/.identity-snapshot` — 完整内容
+
+#### Step 3：读取最近同步日志
+
+扫描 `{workspace}/.workbuddy/memory/` 目录下最近 3 天的日志文件，提取包含以下关键词的条目：
+- 同步、sync、切入、切出、开工、收工、switch in、switch out
+
+如果没有找到，记录"未找到近 3 天的同步相关日志"。
+
+#### Step 4：引导用户描述问题
+
+使用 `ask_followup_question` 一次性收集问题分类和严重程度：
+
+```json
+[
+  {
+    "id": "symptom",
+    "question": "遇到了什么问题？（可多选）",
+    "options": [
+      "切入同步失败/报错",
+      "切出同步失败/报错",
+      "同步后数据丢失或不一致",
+      "配置文件损坏或无法解析",
+      "冲突文件未正确处理",
+      "其他问题（请在下一步补充）"
+    ],
+    "multiSelect": true
+  },
+  {
+    "id": "severity",
+    "question": "问题严重程度？",
+    "options": [
+      "完全无法同步（阻断使用）",
+      "部分功能异常但可绕过",
+      "轻微不便"
+    ],
+    "multiSelect": false
+  }
+]
+```
+
+然后追问（自由文本对话）：
+1. "能描述一下具体的操作步骤吗？（做了什么操作后出现问题）"
+2. "有没有看到具体的报错信息？（如果有，请贴出来）"
+3. "还有什么补充信息吗？（比如最近改过配置、换过同步方式等）"
+
+**注意**：如果用户之前在对话中已经描述了问题现象或贴出了报错信息，不要重复询问已有的信息，直接使用即可。
+
+#### Step 5：生成报告文件
+
+按照 `references/bug-report-template.md` 的模板，将 Step 1-4 收集到的所有信息填入，生成 `.md` 报告文件。
+
+文件命名：`sync-bug-report-YYYYMMDD-HHMMSS.md`
+
+保存位置：
+- Windows：`$env:USERPROFILE\Desktop\`
+- macOS：`~/Desktop/`
+- Linux：`~/Desktop/`（如存在）或工作区根目录
+
+#### Step 6：交付
+
+告知用户：
+> "报告已保存到 {完整路径}，请将此文件发给 MC 即可。"
+
+使用 `deliver_attachments` 工具将报告文件交付给用户。

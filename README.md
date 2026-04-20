@@ -55,11 +55,13 @@ multi-device-sync/
 │   ├── architecture-b-direct.md# 直接同步模式指南
 │   ├── architecture-c-git.md   # Git 模式指南
 │   ├── questionnaire.md        # 问卷设计文档
-│   └── conflict-patterns.md    # 冲突文件命名模式
+│   ├── conflict-patterns.md    # 冲突文件命名模式
+│   └── bug-report-template.md  # Bug 报告模板
 └── scripts/
     ├── sync-in.ps1 / .sh       # 切入同步脚本
     ├── sync-out.ps1 / .sh      # 切出同步脚本
-    └── detect-conflicts.ps1/.sh # 冲突检测脚本
+    ├── detect-conflicts.ps1/.sh # 冲突检测脚本
+    └── collect-diagnostics.ps1/.sh # 诊断信息采集脚本
 ```
 
 ## 技术要求
@@ -67,6 +69,18 @@ multi-device-sync/
 - **WorkBuddy** IDE 插件
 - 系统内置工具：robocopy（Windows）/ rsync（macOS/Linux）/ git（可选）
 - 无第三方依赖
+
+## 问题反馈
+
+遇到同步问题？直接在 WorkBuddy 中说：
+
+- "**反馈问题**"
+- "**报 bug**"
+- "**同步出错了**"
+
+AI 会自动采集你当前设备的环境信息、同步配置和状态日志，引导你描述问题现象，然后生成一份结构化的诊断报告文件（`.md`）保存到桌面。
+
+**把这个文件发给开发者即可**——报告中包含了定位问题所需的全部上下文。
 
 ## 验证状态
 
