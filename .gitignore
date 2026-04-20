@@ -1,0 +1,10 @@
+# OS generated
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Sync artifacts
+*.skill
+sync-config.yaml
+.sync-lock
+.identity-snapshot
