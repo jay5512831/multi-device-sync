@@ -4,7 +4,7 @@
     读取 sync-config.yaml，从其他设备拉取数据，检测冲突。
 .DESCRIPTION
     架构 A（中转目录）：从其他设备的中转子目录复制
-    架构 B（直接同步）：检查 .sync-lock 并运行冲突检测
+    架构 B（直接同步）：检查 sync-lock 并运行冲突检测
     架构 C（Git）：执行 git pull --rebase
 .PARAMETER Workspace
     工作区根目录路径（包含 .workbuddy/）
@@ -118,7 +118,7 @@ if ($architecture -eq "relay") {
 
 # --- 架构 B：直接同步 ---
 elseif ($architecture -eq "direct") {
-    $lockPath = Join-Path $Workspace ".workbuddy\.sync-lock"
+    $lockPath = Join-Path $Workspace ".workbuddy\sync-lock"
     
     # 检查锁文件
     if (Test-Path $lockPath) {

@@ -75,7 +75,7 @@ if ($architecture -eq "relay") {
 
 # --- 架构 B：直接同步 ---
 elseif ($architecture -eq "direct") {
-    $lockPath = Join-Path $localWB ".sync-lock"
+    $lockPath = Join-Path $localWB "sync-lock"
     $lockContent = @"
 device: "$DeviceId"
 timestamp: "$timestamp"

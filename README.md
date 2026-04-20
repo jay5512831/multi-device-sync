@@ -68,6 +68,18 @@ multi-device-sync/
 - 系统内置工具：robocopy（Windows）/ rsync（macOS/Linux）/ git（可选）
 - 无第三方依赖
 
+## 验证状态
+
+目前只在以下环境中完成了实际验证：
+
+- ✅ **Windows** + **群晖 Synology Drive**（架构 A：中转目录模式）
+
+其他操作系统（macOS / Linux）和同步方式（iCloud / OneDrive / Dropbox / Git 等）的脚本和流程已编写，但尚未经过实际环境测试。
+
+**欢迎社区参与：**
+- 如果你在其他环境中遇到问题，可以利用 WorkBuddy 的能力自行修复，并更新到 skill 中
+- 也欢迎在 [Issues](https://github.com/jay5512831/multi-device-sync/issues) 中反馈问题或提出建议
+
 ## License
 
 MIT

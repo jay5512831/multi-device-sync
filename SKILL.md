@@ -138,7 +138,7 @@ updated: <ISO-8601 时间戳>
 详见 `references/architecture-b-direct.md`。
 `.workbuddy/` 已被云服务同步。执行冲突检测：
 - 运行 `scripts/detect-conflicts.ps1`（Windows）或 `scripts/detect-conflicts.sh`（macOS/Linux）
-- 检查 `.sync-lock` 文件，见下方"锁文件逻辑"
+- 检查 `sync-lock` 文件，见下方"锁文件逻辑"
 
 **架构 C（Git）**：
 详见 `references/architecture-c-git.md`。
@@ -213,10 +213,10 @@ git pull --rebase
 - Windows：`robocopy "{workspace}\.workbuddy" "{workspace}\{relay_dir}\{device_id}" /MIR /E`
 - macOS/Linux：`rsync -av --delete "{workspace}/.workbuddy/" "{workspace}/{relay_dir}/{device_id}/"`
 
-**重要**：中转目录名不要以 `.` 开头，否则过滤点号文件夹的云服务会跳过它。
+**重要**：群晖 Drive 等服务会过滤**所有**以 `.` 开头的文件和文件夹（不只是文件夹）。中转目录中任何需要被对方设备读到的文件都不能以 `.` 开头。
 
 **架构 B（直接同步）**：
-写入 `.sync-lock` 文件（云服务自动处理剩下的）：
+写入 `sync-lock` 文件（云服务自动处理剩下的）：
 ```yaml
 device: "{当前设备ID}"
 timestamp: "{ISO-8601}"
@@ -249,15 +249,15 @@ git push
 
 ## 锁文件逻辑（架构 B）
 
-`.workbuddy/` 中的 `.sync-lock` 文件用于防止直接同步模式下的冲突。
+`.workbuddy/` 中的 `sync-lock` 文件用于防止直接同步模式下的冲突。
 
-**切入时检查 `.sync-lock`**：
+**切入时检查 `sync-lock`**：
 1. 文件不存在 → 正常继续
 2. 文件存在，`device` = 当前设备 → 上次未正常切出的残留锁，删除并继续
 3. 文件存在，`device` ≠ 当前设备，`timestamp` < 24小时前 → 其他设备刚切出，等云服务同步完成（建议等 30-60 秒），然后继续
 4. 文件存在，`device` ≠ 当前设备，`timestamp` > 24小时前 → 过期锁，警告用户（"设备 '{x}' 在超过24小时前切出但锁仍存在，继续执行。"），删除并继续
 
-**切出时**：写入 `.sync-lock`，包含当前设备 ID 和时间戳。
+**切出时**：写入 `sync-lock`，包含当前设备 ID 和时间戳。
 
 ## 冲突检测
 

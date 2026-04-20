@@ -65,7 +65,7 @@ if [ "$ARCHITECTURE" = "relay" ]; then
 
 # --- 架构 B：直接同步 ---
 elif [ "$ARCHITECTURE" = "direct" ]; then
-    LOCK_PATH="$WORKSPACE/.workbuddy/.sync-lock"
+    LOCK_PATH="$WORKSPACE/.workbuddy/sync-lock"
     
     if [ -f "$LOCK_PATH" ]; then
         LOCK_DEVICE=$(yaml_get "device" "$LOCK_PATH")

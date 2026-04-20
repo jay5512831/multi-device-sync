@@ -27,7 +27,7 @@ Thumbs.db
 *~
 
 # 同步锁（由技能管理，不纳入版本控制）
-.sync-lock
+sync-lock
 
 # 大型二进制文件
 *.zip

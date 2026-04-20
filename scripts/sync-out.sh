@@ -43,7 +43,7 @@ if [ "$ARCHITECTURE" = "relay" ]; then
 
 # --- 架构 B：直接同步 ---
 elif [ "$ARCHITECTURE" = "direct" ]; then
-    LOCK_PATH="$LOCAL_WB/.sync-lock"
+    LOCK_PATH="$LOCAL_WB/sync-lock"
     cat > "$LOCK_PATH" << EOF
 device: "$DEVICE_ID"
 timestamp: "$TIMESTAMP"

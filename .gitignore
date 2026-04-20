@@ -6,5 +6,5 @@ Desktop.ini
 # Sync artifacts
 *.skill
 sync-config.yaml
-.sync-lock
+sync-lock
 .identity-snapshot
